@@ -1,9 +1,13 @@
 language: node_js
 node_js:
-  - 8
+- 8
 cache:
   directories:
-    - node_modules
+  - node_modules
 script:
-  - npm run build
-  - npm test
+- npm run build
+- npm test
+env:
+  global:
+  - secure: lalalaencryptedenv
+  - secure: RBq+Ls6zggtu+/NtdBTEXhOaLeWPZl/3uIoQlv7s2/LFsyGyZlqi9fhZmwcbRQZ47LYweJa+yje7lY8v83IjQUYkXR6tQTeF8xqg3xEJUsp5zNQp9zGW2n7NQaKOASyIipomcwNE6vp4Z7fNtp8wgOgqta89lslMig0xarvF/ycpXKi3MQqXBtSey0VYa/RZzml8yJtMTpmJH+zAvg3QL+6Cxx9hZIWaRfv7XIniYpkn2e4OrRhf39ZgzPDBBGeUg7C7Gsfvv/ggiFih5UAy/njvTnb3hVumsUayXQFl1KJl5akPPdoxED9bUJQym1XgRn3APq7ah+WmHQE/cMPcobfK25IOmb73UatvqnNmEMHkPV0pS7fDNsq5y09LjCAOk80jCnG2kOF6IkawfDYneqlm/Ah3OwKbG8IcA+Im/1RjQ9B6hmcZJ5L19cJUvEJQS2EQbDHu0VRj+Idg6BXFzXMo4ZSuJ3yWhy3752OzJBCakw1R9GN85YLT4DCS+FBsiqAqWxz79jLTz2VRetrI24fVWn0gsBzNUpqnq35Up5BArIO5Sj9HK+zumcnE7aQz1AkxaqQoThRunZW7DChO0OANo9lf69yCbcbXlUpI82uyIXt7OHxE8U4oS3vMhzhIdNCCiT5Qi02ww93qM7paoHZ+as0Gb7n8ihkSZbUIKv4=
