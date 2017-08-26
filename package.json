@@ -1,15 +1,26 @@
 {
-  "name": "simple-client-react",
-  "version": "0.1.0",
   "private": true,
+  "homepage": ".",
   "dependencies": {
+    "material-ui": "^1.0.0-beta.6",
+    "material-ui-icons": "^1.0.0-beta.5",
+    "normalize.css": "^7.0.0",
     "react": "^15.6.1",
-    "react-dom": "^15.6.1"
+    "react-dom": "^15.6.1",
+    "react-sip": "^0.3.1",
+    "recompose": "^0.25.0",
+    "styled-components": "^2.1.2"
   },
   "devDependencies": {
+    "eslint-config-airbnb": "^15.1.0",
+    "prettier-eslint": "^6.4.2",
+    "prettier-eslint-cli": "^4.2.1",
     "react-scripts": "1.0.11"
   },
   "scripts": {
+    "format:js": "prettier-eslint \"./src/**/*.js\" --write",
+    "lint:js": "eslint src",
+    "lint": "npm run lint:js",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
