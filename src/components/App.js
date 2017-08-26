@@ -15,7 +15,19 @@ const Wrapper = styled.div`
 `;
 
 const App = () =>
-  (<SipProvider host="dev.callthem.online" port="7443" user="1007" password="31337">
+  (<SipProvider
+    host="dev.callthem.online"
+    port="7443"
+    user="1007"
+    password="31337"
+    iceServers={[
+      {
+        urls: 'turn:free.nikulin.website:5349?transport=tcp',
+        username: 'free',
+        credential: 'denis',
+      },
+    ]}
+  >
     <Wrapper>
       <AppBar />
       <CallArea />
