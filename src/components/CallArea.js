@@ -1,11 +1,16 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import Paper from 'material-ui/Paper';
 import styled from 'styled-components';
 import { trim } from 'lodash';
-import { withState, compose, pure, withPropsOnChange, withHandlers } from 'recompose';
+import { PhoneNumberUtil } from 'google-libphonenumber';
+import { withState, compose, pure, withPropsOnChange, withHandlers, getContext } from 'recompose';
 import TextField from 'material-ui/TextField';
 import IconButton from 'material-ui/IconButton';
 import CallIcon from 'material-ui-icons/Call';
+
+const phoneUtil = PhoneNumberUtil.getInstance();
+const conferencePhoneNumber = '3500';
 
 const Wrapper = styled(Paper)`
   flex-grow: 1;
@@ -21,13 +26,13 @@ const CallForm = styled.div`
 `;
 const ActionButtonWrapper = styled.div``;
 
-const CallArea = ({ phoneNumber, phoneNumberIsWrong, phoneNumberIsEmpty, onPhoneNumberChange }) =>
+const CallArea = ({ phoneNumber, phoneNumberIsValid, phoneNumberIsEmpty, onPhoneNumberChange }) =>
   (<Wrapper>
     <CallForm>
       <TextField
         label="Who shall we call?"
         placeholder="e.g. +44 000 000-00-00"
-        error={phoneNumberIsWrong}
+        error={!phoneNumberIsEmpty && !phoneNumberIsValid}
         helperText=" "
         value={phoneNumber}
         InputProps={{
@@ -35,7 +40,7 @@ const CallArea = ({ phoneNumber, phoneNumberIsWrong, phoneNumberIsEmpty, onPhone
         }}
       />
       <ActionButtonWrapper>
-        <IconButton color="primary" disabled={phoneNumberIsWrong || phoneNumberIsEmpty}>
+        <IconButton color="primary" disabled={phoneNumberIsEmpty || !phoneNumberIsValid}>
           <CallIcon />
         </IconButton>
       </ActionButtonWrapper>
@@ -43,17 +48,33 @@ const CallArea = ({ phoneNumber, phoneNumberIsWrong, phoneNumberIsEmpty, onPhone
   </Wrapper>);
 
 export default compose(
-  withState('phoneNumber', 'setPhoneNumber', '3500'),
+  getContext({
+    sipStart: PropTypes.func,
+    sipAnswer: PropTypes.func,
+    sipStop: PropTypes.func,
+    callStatus: PropTypes.string,
+  }),
+  withState('phoneNumber', 'setPhoneNumber', conferencePhoneNumber),
   withHandlers({
     onPhoneNumberChange: ({ setPhoneNumber }) => (e) => {
       setPhoneNumber(e.target.value);
     },
   }),
   withPropsOnChange(['phoneNumber'], ({ phoneNumber }) => {
-    const phoneNumberIsWrong = phoneNumber === '123';
     const phoneNumberIsEmpty = trim(phoneNumber) === '';
+    let phoneNumberIsValid = false;
+    if (phoneNumber.replace(/\s/g, '') === conferencePhoneNumber) {
+      phoneNumberIsValid = true;
+    } else if (!phoneNumberIsEmpty) {
+      try {
+        const phoneNumberProto = phoneUtil.parse(phoneNumber, 'UK');
+        phoneNumberIsValid = phoneUtil.isValidNumber(phoneNumberProto);
+      } catch (e) {
+        /* eslint-disable-line no-empty */
+      }
+    }
     return {
-      phoneNumberIsWrong,
+      phoneNumberIsValid,
       phoneNumberIsEmpty,
     };
   }),
