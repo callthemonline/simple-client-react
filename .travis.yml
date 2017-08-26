@@ -15,7 +15,7 @@ env:
   - secure: njOfEvIi0p5DHUxB/HSwOkhTNjjtyK9y/K/8W+vQYxfSW8J1Z9Aq1gt7n9/F152LOXZbKLVE+4N5JadYMbZcEi90dqxZ30wYOFsNgU4lht9I/+On3XU1V6EKTlTnRerDvTUD7P60T/1UyewhoVjSSb4YHChJPvjK1WT4C9sJsWRNHa2mPsGi+8i5EpnKoro3DdCJg082s00EmPKfbfz1Y+g8y5Od1yKjlL2MV5Z8Y9FxeFIzTvESXaN3mp36FsmP7wTyxR9lUKMRbGxXkDFLrOvYXrTzqfPnPn5ECWOgvi3CZ5F0WE9MHULYkk+Rp7fSVhb0bJSeWxNRlXNVuGG11zhj2GCV69W2qwx7JerluQVUcQkNoylLkpiElrzv2587YI9dPf11nuMXhG5oaoBayFPfnHhZi8zjgK6+uh3yLJ7QhN/ad0ptR0eTfigQ0QEZROfDqHHOxrmiIDTJr2Ra8++9r30fRpnJRgiQzbYJ3+Aq+Iuyh9AcowxNJxuk3jxDATfFjyeULW2mGpaz9sfAdltWW4l3Xm+SKuHCN1YOcwsA+1u8Ttxda62/+X+GRODb/E2AN3AyGWpneXyiPbA1Vy0SXGir184sWBnKVu4TLzwqtIIilYSgE0AqE126OLPZTQLGFv9AkrDUyoTsWVMTFt8j6zC3HUGyefshqip3Lks=
 after_success:
 - docker login -e $DOCKER_EMAIL -u $DOCKER_USER -p $DOCKER_PASS
-- export REPO=sebestblog/travis-demo
+- export REPO=callthemonline/simple-client-react
 - export TAG=`if [ "$TRAVIS_BRANCH" == "master" ]; then echo "latest"; else echo $TRAVIS_BRANCH
   ; fi`
 - docker build -f Dockerfile -t $REPO:$COMMIT .
