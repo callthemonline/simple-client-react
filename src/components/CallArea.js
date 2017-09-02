@@ -122,6 +122,11 @@ export default compose(
         }
       }
     },
+    onStartButtonClick: ({ sipStart, callStatus, phoneNumberIsValid, phoneNumber }) => () => {
+      if (callStatus === CALL_STATUS_IDLE && phoneNumberIsValid) {
+        sipStart(phoneNumber);
+      }
+    },
     onStopButtonClick: ({ sipStop, callStatus }) => () => {
       if (callStatus === CALL_STATUS_ACTIVE) {
         sipStop();
