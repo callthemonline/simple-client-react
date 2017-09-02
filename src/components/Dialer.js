@@ -153,7 +153,7 @@ export default compose(
         // enter
         if (callStatus === CALL_STATUS_IDLE && phoneNumberIsValid) {
           sipStart(phoneNumber);
-          addToCallLog({ phoneNumber });
+          addToCallLog({ phoneNumber, startTimestamp: +new Date() });
         }
       }
     },
@@ -166,7 +166,7 @@ export default compose(
     }) => () => {
       if (callStatus === CALL_STATUS_IDLE && phoneNumberIsValid) {
         sipStart(phoneNumber);
-        addToCallLog({ phoneNumber });
+        addToCallLog({ phoneNumber, startTimestamp: +new Date() });
       }
     },
     onStopButtonClick: ({ sipStop, callStatus }) => () => {
