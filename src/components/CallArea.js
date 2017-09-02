@@ -33,6 +33,7 @@ const CallArea = ({
   phoneNumberIsValid,
   phoneNumberIsEmpty,
   onPhoneNumberChange,
+  onPhoneNumberFocus,
   onPhoneNumberKeyDown,
   onStartButtonClick,
   onStopButtonClick,
@@ -50,6 +51,7 @@ const CallArea = ({
         disabled={callStatus !== CALL_STATUS_IDLE}
         InputProps={{
           onChange: onPhoneNumberChange,
+          onFocus: onPhoneNumberFocus,
           onKeyDown: onPhoneNumberKeyDown,
         }}
       />
@@ -113,6 +115,14 @@ export default compose(
   withHandlers({
     onPhoneNumberChange: ({ setPhoneNumber }) => (e) => {
       setPhoneNumber(e.target.value);
+    },
+    onPhoneNumberFocus: ({ callStatus }) => (e) => {
+      const target = e.target;
+      setTimeout(() => {
+        if (callStatus === CALL_STATUS_IDLE && target) {
+          target.select();
+        }
+      }, 50);
     },
     onPhoneNumberKeyDown: ({ callStatus, phoneNumberIsValid, phoneNumber, sipStart }) => (e) => {
       if (e.which === 13) {
