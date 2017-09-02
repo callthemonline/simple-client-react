@@ -11,6 +11,7 @@ module.exports = {
     'arrow-parens': ['error', 'always'],
     'class-methods-use-this': 'warn',
     'dot-notation': 'off',
+    'import/prefer-default-export': 'off',
     'no-confusing-arrow': 'off',
     'no-mixed-operators': [
       'error',

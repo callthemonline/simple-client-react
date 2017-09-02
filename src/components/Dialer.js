@@ -2,24 +2,28 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Paper from 'material-ui/Paper';
 import styled from 'styled-components';
+import { connect } from 'react-redux';
 import { trim } from 'lodash';
 import { PhoneNumberUtil } from 'google-libphonenumber';
-import { withState, compose, pure, withPropsOnChange, withHandlers, getContext } from 'recompose';
+import { compose, pure, withPropsOnChange, withHandlers, getContext } from 'recompose';
 import TextField from 'material-ui/TextField';
 import IconButton from 'material-ui/IconButton';
 import CallIcon from 'material-ui-icons/Call';
 import CallEndIcon from 'material-ui-icons/CallEnd';
 import { CALL_STATUS_IDLE, CALL_STATUS_STARTING, CALL_STATUS_ACTIVE } from 'react-sip';
+import { CONFERENCE_PHONE_NUMBER } from './../../src/redux/dialer/constants';
 
 const phoneUtil = PhoneNumberUtil.getInstance();
-const conferencePhoneNumber = '3500';
 
-const Wrapper = styled(Paper)`
-  flex-grow: 1;
+const Wrapper = styled(Paper).attrs({
+  elevation: 0,
+})`
   display: flex;
-  padding-top: 80px;
+  flex-grow: 1;
   align-items: center;
   justify-content: center;
+  min-height: 120px;
+  padding-top: 10px;
 `;
 const CallForm = styled.div`
   max-width: 600px;
@@ -28,7 +32,7 @@ const CallForm = styled.div`
 `;
 const ActionButtonWrapper = styled.div`width: 40px;`;
 
-const CallArea = ({
+const Dialer = ({
   phoneNumber,
   phoneNumberIsValid,
   phoneNumberIsEmpty,
@@ -81,11 +85,25 @@ export default compose(
     sipStop: PropTypes.func,
     callStatus: PropTypes.string,
   }),
-  withState('phoneNumber', 'setPhoneNumber', conferencePhoneNumber),
+  connect(
+    (state) => state.dialer,
+    (dispatch) => ({
+      setPhoneNumber: (value) =>
+        dispatch({
+          type: 'dialer/SET_PHONE_NUMBER',
+          value,
+        }),
+      addToCallLog: (entry) =>
+        dispatch({
+          type: 'callLog/ADD',
+          entry,
+        }),
+    }),
+  ),
   withPropsOnChange(['phoneNumber'], ({ phoneNumber }) => {
     const phoneNumberIsEmpty = trim(phoneNumber) === '';
     let phoneNumberIsValid = false;
-    if (phoneNumber.replace(/\s/g, '') === conferencePhoneNumber) {
+    if (phoneNumber.replace(/\s/g, '') === CONFERENCE_PHONE_NUMBER) {
       phoneNumberIsValid = true;
     } else if (!phoneNumberIsEmpty) {
       try {
@@ -124,17 +142,31 @@ export default compose(
         }
       }, 50);
     },
-    onPhoneNumberKeyDown: ({ callStatus, phoneNumberIsValid, phoneNumber, sipStart }) => (e) => {
+    onPhoneNumberKeyDown: ({
+      callStatus,
+      phoneNumberIsValid,
+      phoneNumber,
+      sipStart,
+      addToCallLog,
+    }) => (e) => {
       if (e.which === 13) {
         // enter
         if (callStatus === CALL_STATUS_IDLE && phoneNumberIsValid) {
           sipStart(phoneNumber);
+          addToCallLog({ phoneNumber });
         }
       }
     },
-    onStartButtonClick: ({ sipStart, callStatus, phoneNumberIsValid, phoneNumber }) => () => {
+    onStartButtonClick: ({
+      sipStart,
+      callStatus,
+      phoneNumberIsValid,
+      phoneNumber,
+      addToCallLog,
+    }) => () => {
       if (callStatus === CALL_STATUS_IDLE && phoneNumberIsValid) {
         sipStart(phoneNumber);
+        addToCallLog({ phoneNumber });
       }
     },
     onStopButtonClick: ({ sipStop, callStatus }) => () => {
@@ -144,4 +176,4 @@ export default compose(
     },
   }),
   pure,
-)(CallArea);
+)(Dialer);

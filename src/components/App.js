@@ -1,9 +1,12 @@
 import React from 'react';
 import { SipProvider } from 'react-sip';
+import { compose } from 'recompose';
+import { connect } from 'react-redux';
 import styled from 'styled-components';
 
 import AppBar from './AppBar';
-import CallArea from './CallArea';
+import Dialer from './Dialer';
+import CallLog from './CallLog';
 
 const Wrapper = styled.div`
   position: absolute;
@@ -12,9 +15,32 @@ const Wrapper = styled.div`
   bottom: 0;
   left: 0;
   display: flex;
+  flex-direction: column;
 `;
 
-const App = () =>
+const MainArea = styled.div`
+  display: flex;
+  padding-top: 65px;
+  flex-direction: column;
+  flex-grow: 1;
+  flex-direction: column;
+`;
+
+const DialWrapper = styled.div`
+  display: flex;
+  flex-grow: ${(p) => (p['data-callLogIsEmpty'] ? 1 : 0)};
+  position: relative;
+  transition: all 0.5s ease-in-out;
+`;
+const CallLogWrapper = styled.div`
+  display: flex;
+  flex-grow: ${(p) => (p['data-callLogIsEmpty'] ? 0 : 1)};
+  height: ${(p) => (p['data-callLogIsEmpty'] ? 0 : 'auto')};
+  position: relative;
+  transition: all 0.5s ease-in-out;
+`;
+
+const App = ({ callLogIsEmpty }) =>
   (<SipProvider
     host="dev.callthem.online"
     port="7443"
@@ -30,8 +56,19 @@ const App = () =>
   >
     <Wrapper>
       <AppBar />
-      <CallArea />
+      <MainArea>
+        <DialWrapper data-callLogIsEmpty={callLogIsEmpty}>
+          <Dialer />
+        </DialWrapper>
+        <CallLogWrapper data-callLogIsEmpty={callLogIsEmpty}>
+          <CallLog />
+        </CallLogWrapper>
+      </MainArea>
     </Wrapper>
   </SipProvider>);
 
-export default App;
+export default compose(
+  connect((state) => ({
+    callLogIsEmpty: !state.callLog.entries.length,
+  })),
+)(App);
