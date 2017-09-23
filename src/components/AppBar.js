@@ -15,8 +15,8 @@ const CustomAppBar = ({
   onMenuIconButtonClick,
   onMenuRequestClose,
   onResetClick,
-}) =>
-  (<AppBar>
+}) => (
+  <AppBar>
     <Toolbar>
       <IconButton onClick={onMenuIconButtonClick} color="contrast" aria-label="Menu">
         <MenuIcon />
@@ -33,7 +33,8 @@ const CustomAppBar = ({
         callthem.online
       </Typography>
     </Toolbar>
-  </AppBar>);
+  </AppBar>
+);
 
 export default compose(
   connect(),
