@@ -43,7 +43,6 @@ const CallLogWrapper = styled.div`
 
 const App = ({ callLogIsEmpty }) =>
   (<SipProvider
-    debug
     autoRegister={false}
     host="dev.callthem.online"
     port="7443"
