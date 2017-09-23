@@ -5,12 +5,23 @@ import styled from 'styled-components';
 import { connect } from 'react-redux';
 import { trim } from 'lodash';
 import { PhoneNumberUtil, PhoneNumberFormat } from 'google-libphonenumber';
-import { compose, pure, withPropsOnChange, withHandlers, getContext } from 'recompose';
+import {
+  compose,
+  pure,
+  withPropsOnChange,
+  withHandlers,
+  getContext,
+} from 'recompose';
 import TextField from 'material-ui/TextField';
 import IconButton from 'material-ui/IconButton';
 import CallIcon from 'material-ui-icons/Call';
 import CallEndIcon from 'material-ui-icons/CallEnd';
-import { CALL_STATUS_IDLE, CALL_STATUS_STARTING, CALL_STATUS_ACTIVE } from 'react-sip';
+import PhoneInTalkIcon from 'material-ui-icons/PhoneInTalk';
+import {
+  CALL_STATUS_IDLE,
+  CALL_STATUS_STARTING,
+  CALL_STATUS_ACTIVE,
+} from 'react-sip';
 import { CONFERENCE_PHONE_NUMBER } from './../../src/redux/dialer/constants';
 
 const phoneUtil = PhoneNumberUtil.getInstance();
@@ -61,7 +72,9 @@ const Dialer = ({
       <ActionButtonWrapper>
         {callStatus === CALL_STATUS_IDLE ? (
           <IconButton
-            color={phoneNumberIsEmpty || !phoneNumberIsValid ? undefined : 'primary'}
+            color={
+              phoneNumberIsEmpty || !phoneNumberIsValid ? undefined : 'primary'
+            }
             disabled={phoneNumberIsEmpty || !phoneNumberIsValid}
             onClick={onStartButtonClick}
           >
@@ -71,6 +84,11 @@ const Dialer = ({
         {callStatus === CALL_STATUS_ACTIVE ? (
           <IconButton color="primary" onClick={onStopButtonClick}>
             <CallEndIcon />
+          </IconButton>
+        ) : null}
+        {callStatus === CALL_STATUS_STARTING ? (
+          <IconButton color="primary" onClick={onStopButtonClick}>
+            <PhoneInTalkIcon />
           </IconButton>
         ) : null}
       </ActionButtonWrapper>
