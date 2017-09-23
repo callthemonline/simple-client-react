@@ -3,10 +3,22 @@ import { SipProvider } from 'react-sip';
 import { compose } from 'recompose';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
+import { MuiThemeProvider, createMuiTheme } from 'material-ui/styles';
+import { blue } from 'material-ui/colors';
 
 import AppBar from './AppBar';
 import Dialer from './Dialer';
 import CallLog from './CallLog';
+
+const theme = createMuiTheme({
+  palette: {
+    type: 'light', // default. can be: dark
+    primary: blue,
+    text: {
+      divider: '#7E7', // green-ish ListItem background
+    },
+  },
+});
 
 const Wrapper = styled.div`
   position: absolute;
@@ -56,17 +68,19 @@ const App = ({ callLogIsEmpty }) =>
       },
     ]}
   >
-    <Wrapper>
-      <AppBar />
-      <MainArea>
-        <DialWrapper data-callLogIsEmpty={callLogIsEmpty}>
-          <Dialer />
-        </DialWrapper>
-        <CallLogWrapper data-callLogIsEmpty={callLogIsEmpty}>
-          <CallLog />
-        </CallLogWrapper>
-      </MainArea>
-    </Wrapper>
+    <MuiThemeProvider theme={theme}>
+      <Wrapper>
+        <AppBar />
+        <MainArea>
+          <DialWrapper data-callLogIsEmpty={callLogIsEmpty}>
+            <Dialer />
+          </DialWrapper>
+          <CallLogWrapper data-callLogIsEmpty={callLogIsEmpty}>
+            <CallLog />
+          </CallLogWrapper>
+        </MainArea>
+      </Wrapper>
+    </MuiThemeProvider>
   </SipProvider>);
 
 export default compose(
