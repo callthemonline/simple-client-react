@@ -2,12 +2,12 @@
   "private": true,
   "homepage": ".",
   "dependencies": {
-    "google-libphonenumber": "^3.0.0",
-    "immutability-helper": "^2.3.1",
+    "google-libphonenumber": "^3.0.4",
+    "immutability-helper": "^2.4.0",
     "localforage": "^1.5.0",
     "lodash": "^4.17.4",
-    "material-ui": "^1.0.0-beta.6",
-    "material-ui-icons": "^1.0.0-beta.5",
+    "material-ui": "^1.0.0-beta.11",
+    "material-ui-icons": "^1.0.0-beta.10",
     "normalize.css": "^7.0.0",
     "prop-types": "^15.5.10",
     "react": "^15.6.1",
@@ -16,14 +16,14 @@
     "react-sip": "^0.4.0",
     "recompose": "^0.25.0",
     "redux": "^3.7.2",
-    "redux-persist": "^4.9.1",
+    "redux-persist": "^4.10.0",
     "styled-components": "^2.1.2",
     "timeago.js": "^3.0.2"
   },
   "devDependencies": {
     "eslint-config-airbnb": "^15.1.0",
     "prettier-eslint": "^7.1.0",
-    "prettier-eslint-cli": "^4.3.0",
+    "prettier-eslint-cli": "^4.3.2",
     "react-scripts": "1.0.12"
   },
   "scripts": {

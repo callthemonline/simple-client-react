@@ -22,7 +22,6 @@ const Wrapper = styled(Paper).attrs({
   flex-grow: 1;
   align-items: center;
   justify-content: center;
-  min-height: 120px;
   padding-top: 10px;
 `;
 const CallForm = styled.div`

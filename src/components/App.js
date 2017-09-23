@@ -31,6 +31,7 @@ const DialWrapper = styled.div`
   flex-grow: ${(p) => (p['data-callLogIsEmpty'] ? 1 : 0)};
   position: relative;
   transition: all 0.5s ease-in-out;
+  min-height: 120px;
 `;
 const CallLogWrapper = styled.div`
   display: flex;
@@ -42,6 +43,7 @@ const CallLogWrapper = styled.div`
 
 const App = ({ callLogIsEmpty }) =>
   (<SipProvider
+    autoRegister={false}
     host="dev.callthem.online"
     port="7443"
     user="1007"
