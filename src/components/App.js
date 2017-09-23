@@ -51,6 +51,7 @@ const CallLogWrapper = styled.div`
   height: ${(p) => (p['data-callLogIsEmpty'] ? 0 : 'auto')};
   position: relative;
   transition: all 0.5s ease-in-out;
+  overflow: scroll;
 `;
 
 const App = ({ callLogIsEmpty }) =>
