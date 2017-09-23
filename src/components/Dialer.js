@@ -4,7 +4,7 @@ import Paper from 'material-ui/Paper';
 import styled from 'styled-components';
 import { connect } from 'react-redux';
 import { trim } from 'lodash';
-import { PhoneNumberUtil } from 'google-libphonenumber';
+import { PhoneNumberUtil, PhoneNumberFormat } from 'google-libphonenumber';
 import { compose, pure, withPropsOnChange, withHandlers, getContext } from 'recompose';
 import TextField from 'material-ui/TextField';
 import IconButton from 'material-ui/IconButton';
@@ -42,8 +42,8 @@ const Dialer = ({
   onStopButtonClick,
   callStatus,
   helperText,
-}) =>
-  (<Wrapper>
+}) => (
+  <Wrapper>
     <CallForm>
       <TextField
         label={callStatus === CALL_STATUS_IDLE ? 'Who shall we call?' : ' '}
@@ -59,23 +59,24 @@ const Dialer = ({
         }}
       />
       <ActionButtonWrapper>
-        {callStatus === CALL_STATUS_IDLE
-          ? <IconButton
+        {callStatus === CALL_STATUS_IDLE ? (
+          <IconButton
             color={phoneNumberIsEmpty || !phoneNumberIsValid ? undefined : 'primary'}
             disabled={phoneNumberIsEmpty || !phoneNumberIsValid}
             onClick={onStartButtonClick}
           >
             <CallIcon />
           </IconButton>
-          : null}
-        {callStatus === CALL_STATUS_ACTIVE
-          ? <IconButton color="primary" onClick={onStopButtonClick}>
+        ) : null}
+        {callStatus === CALL_STATUS_ACTIVE ? (
+          <IconButton color="primary" onClick={onStopButtonClick}>
             <CallEndIcon />
           </IconButton>
-          : null}
+        ) : null}
       </ActionButtonWrapper>
     </CallForm>
-  </Wrapper>);
+  </Wrapper>
+);
 
 export default compose(
   getContext({
@@ -130,6 +131,40 @@ export default compose(
     };
   }),
   withHandlers({
+    startCallIfNeeded: ({
+      callStatus,
+      phoneNumberIsValid,
+      phoneNumber,
+      setPhoneNumber,
+      sipStart,
+      addToCallLog,
+    }) => () => {
+      if (callStatus === CALL_STATUS_IDLE && phoneNumberIsValid) {
+        let phoneNumberForSip;
+        let phoneNumberForLog;
+        if (phoneNumber.replace(/\s/g, '') === CONFERENCE_PHONE_NUMBER) {
+          phoneNumberForSip = CONFERENCE_PHONE_NUMBER;
+          phoneNumberForLog = CONFERENCE_PHONE_NUMBER;
+        } else {
+          phoneNumberForSip = phoneUtil.format(
+            phoneUtil.parse(phoneNumber, 'UK'),
+            PhoneNumberFormat.E164,
+          );
+          phoneNumberForLog = phoneUtil.format(
+            phoneUtil.parse(phoneNumber, 'UK'),
+            PhoneNumberFormat.INTERNATIONAL,
+          );
+        }
+        setPhoneNumber(phoneNumberForLog);
+        sipStart(phoneNumberForSip);
+        addToCallLog({
+          phoneNumber: phoneNumberForLog,
+          startTimestamp: +new Date(),
+        });
+      }
+    },
+  }),
+  withHandlers({
     onPhoneNumberChange: ({ setPhoneNumber }) => (e) => {
       setPhoneNumber(e.target.value);
     },
@@ -141,32 +176,14 @@ export default compose(
         }
       }, 50);
     },
-    onPhoneNumberKeyDown: ({
-      callStatus,
-      phoneNumberIsValid,
-      phoneNumber,
-      sipStart,
-      addToCallLog,
-    }) => (e) => {
+    onPhoneNumberKeyDown: ({ startCallIfNeeded }) => (e) => {
       if (e.which === 13) {
         // enter
-        if (callStatus === CALL_STATUS_IDLE && phoneNumberIsValid) {
-          sipStart(phoneNumber);
-          addToCallLog({ phoneNumber, startTimestamp: +new Date() });
-        }
+        startCallIfNeeded();
       }
     },
-    onStartButtonClick: ({
-      sipStart,
-      callStatus,
-      phoneNumberIsValid,
-      phoneNumber,
-      addToCallLog,
-    }) => () => {
-      if (callStatus === CALL_STATUS_IDLE && phoneNumberIsValid) {
-        sipStart(phoneNumber);
-        addToCallLog({ phoneNumber, startTimestamp: +new Date() });
-      }
+    onStartButtonClick: ({ startCallIfNeeded }) => () => {
+      startCallIfNeeded();
     },
     onStopButtonClick: ({ sipStop, callStatus }) => () => {
       if (callStatus === CALL_STATUS_ACTIVE) {

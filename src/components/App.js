@@ -54,8 +54,8 @@ const CallLogWrapper = styled.div`
   overflow: scroll;
 `;
 
-const App = ({ callLogIsEmpty }) =>
-  (<SipProvider
+const App = ({ callLogIsEmpty }) => (
+  <SipProvider
     autoRegister={false}
     host="dev.callthem.online"
     port="7443"
@@ -82,7 +82,8 @@ const App = ({ callLogIsEmpty }) =>
         </MainArea>
       </Wrapper>
     </MuiThemeProvider>
-  </SipProvider>);
+  </SipProvider>
+);
 
 export default compose(
   connect((state) => ({

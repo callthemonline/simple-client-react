@@ -39,11 +39,11 @@ const Wrapper = styled(Paper).attrs({
   display: flex;
 `;
 
-const DialLog = ({ entries, onListItemClick, allowListItemClicks }) =>
-  (<Wrapper>
+const DialLog = ({ entries, onListItemClick, allowListItemClicks }) => (
+  <Wrapper>
     <List subheader={<ListSubheader>Your Call Log</ListSubheader>}>
-      {_.map(entries, (entry, i) =>
-        (<ListItem
+      {_.map(entries, (entry, i) => (
+        <ListItem
           button={allowListItemClicks}
           key={i}
           data-phonenumber={entry.phoneNumber}
@@ -53,10 +53,11 @@ const DialLog = ({ entries, onListItemClick, allowListItemClicks }) =>
             primary={entry.phoneNumber}
             secondary={timeagoInstance.format(entry.startTimestamp, 'custom')}
           />
-        </ListItem>),
-      )}
+        </ListItem>
+      ))}
     </List>
-  </Wrapper>);
+  </Wrapper>
+);
 
 export default compose(
   getContext({
