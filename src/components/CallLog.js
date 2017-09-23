@@ -6,7 +6,15 @@ import Paper from 'material-ui/Paper';
 import { compose, getContext, withHandlers, withPropsOnChange, lifecycle } from 'recompose';
 import { CALL_STATUS_IDLE } from 'react-sip';
 import { connect } from 'react-redux';
-import List, { ListItem, ListItemText, ListSubheader } from 'material-ui/List';
+import List, {
+  ListItem,
+  ListItemText,
+  ListSubheader,
+  ListItemSecondaryAction,
+} from 'material-ui/List';
+import ThumbUpIcon from 'material-ui-icons/ThumbUp';
+import ThumbDownIcon from 'material-ui-icons/ThumbDown';
+import IconButton from 'material-ui/IconButton';
 
 const timeago = require('timeago.js');
 
@@ -39,7 +47,7 @@ const Wrapper = styled(Paper).attrs({
   display: flex;
 `;
 
-const DialLog = ({ entries, onListItemClick, allowListItemClicks }) => (
+const DialLog = ({ entries, onListItemClick, allowListItemClicks, onFeedbackButtonClick }) => (
   <Wrapper>
     <List subheader={<ListSubheader>Your Call Log</ListSubheader>}>
       {_.map(entries, (entry, i) => (
@@ -53,6 +61,24 @@ const DialLog = ({ entries, onListItemClick, allowListItemClicks }) => (
             primary={entry.phoneNumber}
             secondary={timeagoInstance.format(entry.startTimestamp, 'custom')}
           />
+          <ListItemSecondaryAction>
+            <IconButton
+              data-value={entry.feedback === 'positive' ? undefined : 'positive'}
+              data-itemindex={i}
+              color={entry.feedback === 'positive' ? 'primary' : undefined}
+              onClick={onFeedbackButtonClick}
+            >
+              <ThumbUpIcon />
+            </IconButton>
+            <IconButton
+              data-value={entry.feedback === 'negative' ? undefined : 'negative'}
+              data-itemindex={i}
+              color={entry.feedback === 'negative' ? 'accent' : undefined}
+              onClick={onFeedbackButtonClick}
+            >
+              <ThumbDownIcon />
+            </IconButton>
+          </ListItemSecondaryAction>
         </ListItem>
       ))}
     </List>
@@ -89,6 +115,13 @@ export default compose(
       dispatch({
         type: 'dialer/SET_PHONE_NUMBER',
         value: e.currentTarget.dataset['phonenumber'],
+      });
+    },
+    onFeedbackButtonClick: ({ dispatch }) => (e) => {
+      dispatch({
+        type: 'callLog/SET_FEEDBACK',
+        itemIndex: e.currentTarget.dataset['itemindex'] * 1,
+        value: e.currentTarget.dataset['value'],
       });
     },
   }),
