@@ -13,7 +13,7 @@
     "react": "^15.6.1",
     "react-dom": "^15.6.1",
     "react-redux": "^5.0.6",
-    "react-sip": "^0.4.0",
+    "react-sip": "^0.4.1",
     "recompose": "^0.25.0",
     "redux": "^3.7.2",
     "redux-persist": "^4.10.0",
