@@ -30,7 +30,9 @@ const CallForm = styled.div`
   display: flex;
   align-items: center;
 `;
-const ActionButtonWrapper = styled.div`width: 40px;`;
+const ActionButtonWrapper = styled.div`
+  width: 40px;
+`;
 
 const Dialer = ({
   phoneNumber,
@@ -175,7 +177,7 @@ export default compose(
       setPhoneNumber(e.target.value);
     },
     onPhoneNumberFocus: ({ callStatus }) => (e) => {
-      const target = e.target;
+      const { target } = e;
       setTimeout(() => {
         if (callStatus === CALL_STATUS_IDLE && target) {
           target.select();

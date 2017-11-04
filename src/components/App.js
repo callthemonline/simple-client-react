@@ -40,15 +40,15 @@ const MainArea = styled.div`
 
 const DialWrapper = styled.div`
   display: flex;
-  flex-grow: ${(p) => (p['data-callLogIsEmpty'] ? 1 : 0)};
+  flex-grow: ${(p) => (p['data-calllogisempty'] ? 1 : 0)};
   position: relative;
   transition: all 0.5s ease-in-out;
   min-height: 120px;
 `;
 const CallLogWrapper = styled.div`
   display: flex;
-  flex-grow: ${(p) => (p['data-callLogIsEmpty'] ? 0 : 1)};
-  height: ${(p) => (p['data-callLogIsEmpty'] ? 0 : 'auto')};
+  flex-grow: ${(p) => (p['data-calllogisempty'] ? 0 : 1)};
+  height: ${(p) => (p['data-calllogisempty'] ? 0 : 'auto')};
   position: relative;
   transition: all 0.5s ease-in-out;
   overflow: scroll;
@@ -73,10 +73,10 @@ const App = ({ callLogIsEmpty }) => (
       <Wrapper>
         <AppBar />
         <MainArea>
-          <DialWrapper data-callLogIsEmpty={callLogIsEmpty}>
+          <DialWrapper data-calllogisempty={callLogIsEmpty}>
             <Dialer />
           </DialWrapper>
-          <CallLogWrapper data-callLogIsEmpty={callLogIsEmpty}>
+          <CallLogWrapper data-calllogisempty={callLogIsEmpty}>
             <CallLog />
           </CallLogWrapper>
         </MainArea>
@@ -85,8 +85,6 @@ const App = ({ callLogIsEmpty }) => (
   </SipProvider>
 );
 
-export default compose(
-  connect((state) => ({
-    callLogIsEmpty: !state.callLog.entries.length,
-  })),
-)(App);
+export default compose(connect((state) => ({
+  callLogIsEmpty: !state.callLog.entries.length,
+})))(App);
