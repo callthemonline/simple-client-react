@@ -2,7 +2,12 @@
   "private": true,
   "homepage": ".",
   "dependencies": {
+    "apollo-cache-inmemory": "^1.0.0",
+    "apollo-client": "^2.0.1",
+    "apollo-link-http": "^1.1.0",
     "google-libphonenumber": "^3.0.7",
+    "graphql": "^0.11.7",
+    "graphql-tag": "^2.5.0",
     "immutability-helper": "^2.4.0",
     "jssip": "^3.0.18",
     "localforage": "^1.5.3",
@@ -12,6 +17,7 @@
     "normalize.css": "^7.0.0",
     "prop-types": "^15.6.0",
     "react": "^16.0.0",
+    "react-apollo": "^2.0.0",
     "react-dom": "^16.0.0",
     "react-redux": "^5.0.6",
     "react-sip": "^0.4.1",
@@ -35,5 +41,17 @@
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"
+  },
+  "proxy": {
+    "/graphql": {
+      "target": "http://localhost:4000",
+      "pathRewrite": {
+        "^/graphql": "/"
+      }
+    },
+    "/graphql-subscriptions": {
+      "target": "ws://localhost:4001",
+      "ws": true
+    }
   }
 }

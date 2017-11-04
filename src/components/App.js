@@ -1,11 +1,15 @@
 import React from 'react';
-import { SipProvider } from 'react-sip';
-import { compose } from 'recompose';
+import PropTypes from 'prop-types';
+import { ApolloProvider } from 'react-apollo';
+import { compose, withContext, withState } from 'recompose';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
 import { MuiThemeProvider, createMuiTheme } from 'material-ui/styles';
 import { blue } from 'material-ui/colors';
 
+import client from '../graphql/client';
+
+import DynamicSipProvider from './DynamicSipProvider';
 import AppBar from './AppBar';
 import Dialer from './Dialer';
 import CallLog from './CallLog';
@@ -54,37 +58,35 @@ const CallLogWrapper = styled.div`
   overflow: scroll;
 `;
 
-const App = ({ callLogIsEmpty }) => (
-  <SipProvider
-    autoRegister={false}
-    host="dev.callthem.online"
-    port="7443"
-    user="1007"
-    password="31337"
-    iceServers={[
-      {
-        urls: 'turn:free.nikulin.website:5349?transport=tcp',
-        username: 'free',
-        credential: 'denis',
-      },
-    ]}
-  >
-    <MuiThemeProvider theme={theme}>
-      <Wrapper>
-        <AppBar />
-        <MainArea>
-          <DialWrapper data-calllogisempty={callLogIsEmpty}>
-            <Dialer />
-          </DialWrapper>
-          <CallLogWrapper data-calllogisempty={callLogIsEmpty}>
-            <CallLog />
-          </CallLogWrapper>
-        </MainArea>
-      </Wrapper>
-    </MuiThemeProvider>
-  </SipProvider>
+const App = ({ callLogIsEmpty, sipConfig }) => (
+  <ApolloProvider client={client}>
+    <DynamicSipProvider config={sipConfig}>
+      <MuiThemeProvider theme={theme}>
+        <Wrapper>
+          <AppBar />
+          <MainArea>
+            <DialWrapper data-calllogisempty={callLogIsEmpty}>
+              <Dialer />
+            </DialWrapper>
+            <CallLogWrapper data-calllogisempty={callLogIsEmpty}>
+              <CallLog />
+            </CallLogWrapper>
+          </MainArea>
+        </Wrapper>
+      </MuiThemeProvider>
+    </DynamicSipProvider>
+  </ApolloProvider>
 );
 
-export default compose(connect((state) => ({
-  callLogIsEmpty: !state.callLog.entries.length,
-})))(App);
+export default compose(
+  connect((state) => ({
+    callLogIsEmpty: !state.callLog.entries.length,
+  })),
+  withState('sipConfig', 'updateSipConfig'),
+  withContext(
+    {
+      updateSipConfig: PropTypes.func,
+    },
+    ({ updateSipConfig }) => ({ updateSipConfig }),
+  ),
+)(App);
