@@ -4,6 +4,7 @@
   "dependencies": {
     "google-libphonenumber": "^3.0.7",
     "immutability-helper": "^2.4.0",
+    "jssip": "^3.0.18",
     "localforage": "^1.5.3",
     "lodash": "^4.17.4",
     "material-ui": "^1.0.0-beta.11",
