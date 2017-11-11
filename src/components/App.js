@@ -1,7 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
-import { compose, withContext, withState } from 'recompose';
-
 import { ApolloProvider } from 'react-apollo';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
@@ -59,9 +56,9 @@ const CallLogWrapper = styled.div`
   overflow: scroll;
 `;
 
-const App = ({ callLogIsEmpty, sipConfig }) => (
+const App = ({ callLogIsEmpty }) => (
   <ApolloProvider client={client}>
-    <DynamicSipProvider config={sipConfig}>
+    <DynamicSipProvider>
       <MuiThemeProvider theme={theme}>
         <Wrapper>
           <AppBar />
@@ -79,15 +76,6 @@ const App = ({ callLogIsEmpty, sipConfig }) => (
   </ApolloProvider>
 );
 
-export default compose(
-  connect((state) => ({
-    callLogIsEmpty: !state.callLog.entries.length,
-  })),
-  withState('sipConfig', 'updateSipConfig'),
-  withContext(
-    {
-      updateSipConfig: PropTypes.func,
-    },
-    ({ updateSipConfig }) => ({ updateSipConfig }),
-  ),
-)(App);
+export default connect((state) => ({
+  callLogIsEmpty: !state.callLog.entries.length,
+}))(App);
