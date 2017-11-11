@@ -1,4 +1,7 @@
 import React from 'react';
+import PropTypes from 'prop-types';
+import { compose, withContext, withState } from 'recompose';
+
 import { ApolloProvider } from 'react-apollo';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
@@ -6,8 +9,6 @@ import { MuiThemeProvider, createMuiTheme } from 'material-ui/styles';
 import { blue } from 'material-ui/colors';
 
 import client from '../graphql/client';
-import { compose, withContext, withState } from 'recompose';
-import PropTypes from 'prop-types';
 
 import DynamicSipProvider from './DynamicSipProvider';
 import AppBar from './AppBar';
