@@ -1,7 +1,5 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { ApolloProvider } from 'react-apollo';
-import { compose, withContext, withState } from 'recompose';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
 import { MuiThemeProvider, createMuiTheme } from 'material-ui/styles';
@@ -78,15 +76,6 @@ const App = ({ callLogIsEmpty, sipConfig }) => (
   </ApolloProvider>
 );
 
-export default compose(
-  connect((state) => ({
-    callLogIsEmpty: !state.callLog.entries.length,
-  })),
-  withState('sipConfig', 'updateSipConfig'),
-  withContext(
-    {
-      updateSipConfig: PropTypes.func,
-    },
-    ({ updateSipConfig }) => ({ updateSipConfig }),
-  ),
-)(App);
+export default connect((state) => ({
+  callLogIsEmpty: !state.callLog.entries.length,
+}))(App);

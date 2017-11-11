@@ -1,7 +1,9 @@
 import React from 'react';
+import PropTypes from 'prop-types';
+import { compose, withContext, withState } from 'recompose';
 import { SipProvider } from 'react-sip';
 
-export default ({ config, children }) => (
+const DynamicSipProvider = ({ config, children }) => (
   <SipProvider
     host="dev.callthem.online"
     port="7443"
@@ -20,3 +22,13 @@ export default ({ config, children }) => (
     {children}
   </SipProvider>
 );
+
+export default compose(
+  withState('sipConfig', 'updateSipConfig'),
+  withContext(
+    {
+      updateSipConfig: PropTypes.func,
+    },
+    ({ updateSipConfig }) => ({ updateSipConfig }),
+  ),
+)(DynamicSipProvider);
