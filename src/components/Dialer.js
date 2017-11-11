@@ -1,9 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { graphql } from 'react-apollo';
 import Paper from 'material-ui/Paper';
 import styled from 'styled-components';
 import { connect } from 'react-redux';
-import { trim } from 'lodash';
+import { trim, get } from 'lodash';
 import { PhoneNumberUtil, PhoneNumberFormat } from 'google-libphonenumber';
 import { compose, pure, withPropsOnChange, withHandlers, getContext } from 'recompose';
 import TextField from 'material-ui/TextField';
@@ -13,6 +14,7 @@ import CallEndIcon from 'material-ui-icons/CallEnd';
 import PhoneInTalkIcon from 'material-ui-icons/PhoneInTalk';
 import { CALL_STATUS_IDLE, CALL_STATUS_STARTING, CALL_STATUS_ACTIVE } from 'react-sip';
 import { CONFERENCE_PHONE_NUMBER } from './../../src/redux/dialer/constants';
+import { GenerateSipConfig } from '../graphql/mutations';
 
 const phoneUtil = PhoneNumberUtil.getInstance();
 
@@ -87,15 +89,20 @@ const Dialer = ({
 );
 
 export default compose(
+  graphql(GenerateSipConfig, { name: 'generateSipConfig' }),
   getContext({
     sipStart: PropTypes.func,
     sipAnswer: PropTypes.func,
     sipStop: PropTypes.func,
     callStatus: PropTypes.string,
+    updateSipConfig: PropTypes.func,
   }),
   connect(
     (state) => state.dialer,
     (dispatch) => ({
+      requireLogin: () => {
+        window.location.href = '/login';
+      },
       setPhoneNumber: (value) =>
         dispatch({
           type: 'dialer/SET_PHONE_NUMBER',
@@ -136,6 +143,7 @@ export default compose(
     }
     return {
       helperText,
+      callStatus: callStatus || CALL_STATUS_IDLE,
     };
   }),
   withHandlers({
@@ -146,7 +154,10 @@ export default compose(
       setPhoneNumber,
       sipStart,
       addToCallLog,
-    }) => () => {
+      generateSipConfig,
+      requireLogin,
+      updateSipConfig,
+    }) => async () => {
       if (callStatus === CALL_STATUS_IDLE && phoneNumberIsValid) {
         let phoneNumberForSip;
         let phoneNumberForLog;
@@ -164,11 +175,23 @@ export default compose(
           );
         }
         setPhoneNumber(phoneNumberForLog);
-        sipStart(phoneNumberForSip);
-        addToCallLog({
-          phoneNumber: phoneNumberForLog,
-          startTimestamp: +new Date(),
-        });
+        const phoneNumberWithNoSpaces = phoneNumberForLog.replace(/\s+/g, '');
+        try {
+          const response = await generateSipConfig({
+            variables: {
+              phoneNumber: phoneNumberWithNoSpaces,
+            },
+          });
+          const config = get(response, ['data', 'generateSipConfig', 'config']);
+          updateSipConfig(config);
+          sipStart(phoneNumberForSip);
+          addToCallLog({
+            phoneNumber: phoneNumberForLog,
+            startTimestamp: +new Date(),
+          });
+        } catch (e) {
+          requireLogin();
+        }
       }
     },
   }),
