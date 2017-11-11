@@ -6,6 +6,8 @@ import { MuiThemeProvider, createMuiTheme } from 'material-ui/styles';
 import { blue } from 'material-ui/colors';
 
 import client from '../graphql/client';
+import { compose, withContext, withState } from 'recompose';
+import PropTypes from 'prop-types';
 
 import DynamicSipProvider from './DynamicSipProvider';
 import AppBar from './AppBar';
@@ -76,6 +78,15 @@ const App = ({ callLogIsEmpty, sipConfig }) => (
   </ApolloProvider>
 );
 
-export default connect((state) => ({
-  callLogIsEmpty: !state.callLog.entries.length,
-}))(App);
+export default compose(
+  connect((state) => ({
+    callLogIsEmpty: !state.callLog.entries.length,
+  })),
+  withState('sipConfig', 'updateSipConfig'),
+  withContext(
+    {
+      updateSipConfig: PropTypes.func,
+    },
+    ({ updateSipConfig }) => ({ updateSipConfig }),
+  ),
+)(App);

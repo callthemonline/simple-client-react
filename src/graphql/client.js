@@ -5,7 +5,7 @@ import { setContext } from 'apollo-link-context';
 import { parse } from 'cookie';
 
 const authLink = setContext((_, { headers }) => {
-  const token = parse(document.cookie);
+  const { token } = parse(document.cookie);
   return {
     headers: {
       ...headers,
