@@ -100,11 +100,9 @@ export default compose(
   connect(
     (state) => state.dialer,
     (dispatch) => ({
-      requireLogin: () =>
-        dispatch({
-          type: 'user/REQUIRE_LOGIN',
-          timestamp: +new Date(),
-        }),
+      requireLogin: () => {
+        window.location.href = '/login';
+      },
       setPhoneNumber: (value) =>
         dispatch({
           type: 'dialer/SET_PHONE_NUMBER',

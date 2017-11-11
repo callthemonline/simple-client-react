@@ -52,6 +52,9 @@
     "/graphql-subscriptions": {
       "target": "ws://localhost:4001",
       "ws": true
+    },
+    "/login": {
+      "target": "http://localhost:4000"
     }
   }
 }
