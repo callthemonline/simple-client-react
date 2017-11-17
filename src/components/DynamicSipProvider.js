@@ -6,9 +6,9 @@ import { compose, withContext, withState } from 'recompose';
 const DynamicSipProvider = ({ sipConfig, children }) => (
   <SipProvider
     host="dev.callthem.online"
-    port="7443"
+    port="8443"
     user="1007"
-    password="31337"
+    password="0"
     iceServers={[
       {
         urls: 'turn:free.nikulin.website:5349?transport=tcp',
