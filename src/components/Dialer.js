@@ -7,12 +7,18 @@ import { connect } from 'react-redux';
 import { trim, get } from 'lodash';
 import { PhoneNumberUtil, PhoneNumberFormat } from 'google-libphonenumber';
 import { compose, pure, withPropsOnChange, withHandlers, getContext } from 'recompose';
+import sleep from 'sleep-promise';
 import TextField from 'material-ui/TextField';
 import IconButton from 'material-ui/IconButton';
 import CallIcon from 'material-ui-icons/Call';
 import CallEndIcon from 'material-ui-icons/CallEnd';
 import PhoneInTalkIcon from 'material-ui-icons/PhoneInTalk';
-import { CALL_STATUS_IDLE, CALL_STATUS_STARTING, CALL_STATUS_ACTIVE } from 'react-sip';
+import {
+  SIP_STATUS_CONNECTED,
+  CALL_STATUS_IDLE,
+  CALL_STATUS_STARTING,
+  CALL_STATUS_ACTIVE,
+} from 'react-sip';
 import { CONFERENCE_PHONE_NUMBER } from './../../src/redux/dialer/constants';
 import { GenerateSipConfig } from '../graphql/mutations';
 
@@ -91,12 +97,18 @@ const Dialer = ({
 export default compose(
   graphql(GenerateSipConfig, { name: 'generateSipConfig' }),
   getContext({
-    sipStart: PropTypes.func,
-    sipAnswer: PropTypes.func,
-    sipStop: PropTypes.func,
-    callStatus: PropTypes.string,
+    startCall: PropTypes.func,
+    stopCall: PropTypes.func,
+    sip: PropTypes.object,
+    call: PropTypes.object,
     updateSipConfig: PropTypes.func,
   }),
+  withPropsOnChange(['sip'], ({ sip }) => ({
+    sipStatus: sip.status,
+  })),
+  withPropsOnChange(['call'], ({ call }) => ({
+    callStatus: call.status,
+  })),
   connect(
     (state) => state.dialer,
     (dispatch) => ({
@@ -147,12 +159,16 @@ export default compose(
     };
   }),
   withHandlers({
+    getSipStatus: ({ sipStatus }) => () => sipStatus,
+  }),
+  withHandlers({
     startCallIfNeeded: ({
+      getSipStatus,
       callStatus,
       phoneNumberIsValid,
       phoneNumber,
       setPhoneNumber,
-      sipStart,
+      startCall,
       addToCallLog,
       generateSipConfig,
       requireLogin,
@@ -184,7 +200,13 @@ export default compose(
           });
           const config = get(response, ['data', 'generateSipConfig', 'config']);
           updateSipConfig(config);
-          sipStart(phoneNumberForSip);
+          let i = 20;
+          while (i > 0 && getSipStatus() !== SIP_STATUS_CONNECTED) {
+            // eslint-disable-next-line no-await-in-loop
+            await sleep(100);
+            i -= 1;
+          }
+          startCall(phoneNumberForSip);
           addToCallLog({
             phoneNumber: phoneNumberForLog,
             startTimestamp: +new Date(),
@@ -216,9 +238,9 @@ export default compose(
     onStartButtonClick: ({ startCallIfNeeded }) => () => {
       startCallIfNeeded();
     },
-    onStopButtonClick: ({ sipStop, callStatus }) => () => {
+    onStopButtonClick: ({ stopCall, callStatus }) => () => {
       if (callStatus === CALL_STATUS_ACTIVE) {
-        sipStop();
+        stopCall();
       }
     },
   }),
