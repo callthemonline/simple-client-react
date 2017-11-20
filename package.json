@@ -22,11 +22,10 @@
     "react-apollo": "^2.0.1",
     "react-dom": "^16.1.0",
     "react-redux": "^5.0.6",
-    "react-sip": "^0.4.1",
+    "react-sip": "^0.5.0-rc.1",
     "recompose": "^0.26.0",
     "redux": "^3.7.2",
     "redux-persist": "^4.10.2",
-    "sleep-promise": "^2.0.0",
     "styled-components": "^2.2.3",
     "timeago.js": "^3.0.2"
   },
@@ -58,6 +57,8 @@
     },
     "/login": {
       "target": "http://localhost:4000"
-    }
+    },    "/login/callback": {
+          "target": "http://localhost:4000"
+        }
   }
 }
