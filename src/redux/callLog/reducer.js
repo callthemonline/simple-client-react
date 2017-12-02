@@ -19,6 +19,21 @@ export default (state = initialState, action) => {
       });
     }
 
+    case 'callLog/SET_FEEDBACK': {
+      if (!action.value) {
+        return update(state, {
+          entries: {
+            [action.itemIndex]: { $unset: ['feedback'] },
+          },
+        });
+      }
+      return update(state, {
+        entries: {
+          [action.itemIndex]: { feedback: { $set: action.value } },
+        },
+      });
+    }
+
     default:
       return state;
   }
