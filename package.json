@@ -22,7 +22,7 @@
     "react-apollo": "^2.0.1",
     "react-dom": "^16.2.0",
     "react-redux": "^5.0.6",
-    "react-sip": "^0.5.0-rc.9",
+    "react-sip": "^0.5.0",
     "recompose": "^0.26.0",
     "redux": "^3.7.2",
     "redux-persist": "^4.10.2",
