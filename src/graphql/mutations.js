@@ -7,3 +7,11 @@ export const GenerateSipConfig = gql`
     }
   }
 `;
+
+export const UpdateDialer = gql`
+  mutation updateDialer($phoneNumber: String!) {
+    updateDialer(input: { phoneNumber: $phoneNumber }) @client {
+      phoneNumber
+    }
+  }
+`;
