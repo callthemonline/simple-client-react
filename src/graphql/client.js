@@ -3,6 +3,7 @@ import { HttpLink } from 'apollo-link-http';
 import { InMemoryCache } from 'apollo-cache-inmemory';
 import { setContext } from 'apollo-link-context';
 import { parse } from 'cookie';
+import locaLink from './state';
 
 const authLink = setContext((_, { headers }) => {
   const { token } = parse(document.cookie);
@@ -15,7 +16,7 @@ const authLink = setContext((_, { headers }) => {
 });
 
 const client = new ApolloClient({
-  link: authLink.concat(new HttpLink()),
+  link: locaLink.concat(authLink.concat(new HttpLink())),
   cache: new InMemoryCache(),
 });
 

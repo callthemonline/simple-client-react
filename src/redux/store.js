@@ -3,7 +3,6 @@ import { persistStore, autoRehydrate } from 'redux-persist';
 import localForage from 'localforage';
 
 import callLogReducer from './callLog/reducer';
-import dialerReducer from './dialer/reducer';
 
 // eslint-disable-next-line no-underscore-dangle
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
@@ -16,7 +15,6 @@ export default function configureStore() {
       const store = createStore(
         combineReducers({
           callLog: callLogReducer,
-          dialer: dialerReducer,
         }),
         undefined,
         composeEnhancers(autoRehydrate(), applyMiddleware(...middlewares)),

@@ -19,8 +19,9 @@ import {
   CALL_STATUS_STARTING,
   CALL_STATUS_ACTIVE,
 } from 'react-sip';
-import { CONFERENCE_PHONE_NUMBER } from './../../src/redux/dialer/constants';
-import { GenerateSipConfig } from '../graphql/mutations';
+import { DialerInfo } from '../graphql/queries';
+import { GenerateSipConfig, UpdateDialer } from '../graphql/mutations';
+import { CONFERENCE_PHONE_NUMBER } from '../config';
 
 const phoneUtil = PhoneNumberUtil.getInstance();
 
@@ -95,7 +96,18 @@ const Dialer = ({
 );
 
 export default compose(
+  withPropsOnChange([], () => ({
+    requireLogin: () => {
+      window.location.href = '/login';
+    },
+  })),
   graphql(GenerateSipConfig, { name: 'generateSipConfig' }),
+  graphql(UpdateDialer, { name: 'updateDialer' }),
+  graphql(DialerInfo, {
+    props: ({ data: { dialer = {} } }) => ({
+      phoneNumber: dialer.phoneNumber || '',
+    }),
+  }),
   getContext({
     startCall: PropTypes.func,
     stopCall: PropTypes.func,
@@ -110,16 +122,8 @@ export default compose(
     callStatus: call.status,
   })),
   connect(
-    (state) => state.dialer,
+    () => ({}),
     (dispatch) => ({
-      requireLogin: () => {
-        window.location.href = '/login';
-      },
-      setPhoneNumber: (value) =>
-        dispatch({
-          type: 'dialer/SET_PHONE_NUMBER',
-          value,
-        }),
       addToCallLog: (entry) =>
         dispatch({
           type: 'callLog/ADD',
@@ -167,7 +171,7 @@ export default compose(
       callStatus,
       phoneNumberIsValid,
       phoneNumber,
-      setPhoneNumber,
+      updateDialer,
       startCall,
       addToCallLog,
       generateSipConfig,
@@ -190,7 +194,7 @@ export default compose(
             PhoneNumberFormat.INTERNATIONAL,
           );
         }
-        setPhoneNumber(phoneNumberForLog);
+        await updateDialer({ variables: { phoneNumber: phoneNumberForLog } });
         const phoneNumberWithNoSpaces = phoneNumberForLog.replace(/\s+/g, '');
         try {
           const response = await generateSipConfig({
@@ -218,8 +222,8 @@ export default compose(
     },
   }),
   withHandlers({
-    onPhoneNumberChange: ({ setPhoneNumber }) => (e) => {
-      setPhoneNumber(e.target.value);
+    onPhoneNumberChange: ({ updateDialer }) => (e) => {
+      updateDialer({ variables: { phoneNumber: e.target.value } });
     },
     onPhoneNumberFocus: ({ callStatus }) => (e) => {
       const { target } = e;
