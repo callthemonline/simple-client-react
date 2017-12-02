@@ -121,13 +121,16 @@ export default compose(
   withPropsOnChange(['call'], ({ call }) => ({
     callStatus: call.status,
   })),
-  connect((dispatch) => ({
-    addToCallLog: (entry) =>
-      dispatch({
-        type: 'callLog/ADD',
-        entry,
-      }),
-  })),
+  connect(
+    () => ({}),
+    (dispatch) => ({
+      addToCallLog: (entry) =>
+        dispatch({
+          type: 'callLog/ADD',
+          entry,
+        }),
+    }),
+  ),
   withPropsOnChange(['phoneNumber'], ({ phoneNumber }) => {
     const phoneNumberIsEmpty = trim(phoneNumber) === '';
     let phoneNumberIsValid = false;
