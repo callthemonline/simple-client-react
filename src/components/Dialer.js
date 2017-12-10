@@ -59,7 +59,7 @@ const Dialer = ({
   <Wrapper>
     <CallForm>
       <I18n ns="translations">
-        {(t, { i18n }) => (
+        {(t) => (
           <TextField
             label={callStatus === CALL_STATUS_IDLE ? t('dialer.label') : ' '}
             placeholder={t('dialer.sample')}
@@ -143,6 +143,8 @@ export default compose(
       phoneNumberIsValid = true;
     } else if (!phoneNumberIsEmpty) {
       try {
+        const phoneNumberProto = phoneUtil.parse(phoneNumber, 'UK');
+        phoneNumberIsValid = phoneUtil.isValidNumber(phoneNumberProto);
       } catch (e) {
         /* eslint-disable-line no-empty */
       }
