@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import 'normalize.css';
 import App from './components/App';
+import './i18n';
 
 import configureStore from './redux/store';
 

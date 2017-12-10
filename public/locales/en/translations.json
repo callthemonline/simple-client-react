@@ -1,0 +1,9 @@
+{
+  "dialer": {
+    "label": "Who shall we call?",
+    "sample": "e.g. +44 000 000-00-00"
+  },
+  "appbar": {
+    "title": "callthem.online"
+  }
+}

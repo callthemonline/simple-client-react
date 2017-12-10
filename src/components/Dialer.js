@@ -13,6 +13,7 @@ import IconButton from 'material-ui/IconButton';
 import CallIcon from 'material-ui-icons/Call';
 import CallEndIcon from 'material-ui-icons/CallEnd';
 import PhoneInTalkIcon from 'material-ui-icons/PhoneInTalk';
+import { I18n } from 'react-i18next';
 import {
   SIP_STATUS_CONNECTED,
   CALL_STATUS_IDLE,
@@ -57,19 +58,23 @@ const Dialer = ({
 }) => (
   <Wrapper>
     <CallForm>
-      <TextField
-        label={callStatus === CALL_STATUS_IDLE ? 'Who shall we call?' : ' '}
-        placeholder="e.g. +44 000 000-00-00"
-        error={!phoneNumberIsEmpty && !phoneNumberIsValid}
-        helperText={helperText}
-        value={phoneNumber}
-        disabled={callStatus !== CALL_STATUS_IDLE}
-        InputProps={{
-          onChange: onPhoneNumberChange,
-          onFocus: onPhoneNumberFocus,
-          onKeyDown: onPhoneNumberKeyDown,
-        }}
-      />
+      <I18n ns="translations">
+        {(t, { i18n }) => (
+          <TextField
+            label={callStatus === CALL_STATUS_IDLE ? t('dialer.label') : ' '}
+            placeholder={t('dialer.sample')}
+            error={!phoneNumberIsEmpty && !phoneNumberIsValid}
+            helperText={helperText}
+            value={phoneNumber}
+            disabled={callStatus !== CALL_STATUS_IDLE}
+            InputProps={{
+              onChange: onPhoneNumberChange,
+              onFocus: onPhoneNumberFocus,
+              onKeyDown: onPhoneNumberKeyDown,
+            }}
+          />
+        )}
+      </I18n>
       <ActionButtonWrapper>
         {callStatus === CALL_STATUS_IDLE ? (
           <IconButton
@@ -138,8 +143,6 @@ export default compose(
       phoneNumberIsValid = true;
     } else if (!phoneNumberIsEmpty) {
       try {
-        const phoneNumberProto = phoneUtil.parse(phoneNumber, 'UK');
-        phoneNumberIsValid = phoneUtil.isValidNumber(phoneNumberProto);
       } catch (e) {
         /* eslint-disable-line no-empty */
       }
