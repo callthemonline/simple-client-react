@@ -29,7 +29,7 @@ const CustomAppBar = ({
         open={menuIsOpen}
         onRequestClose={onMenuRequestClose}
       >
-        <MenuItem onClick={onResetClick}>Reset</MenuItem>
+        <MenuItem onClick={onResetClick}>{t('appbar.reset')}</MenuItem>
       </Menu>
       <Typography type="title" color="inherit">
         {t('appbar.title')}
