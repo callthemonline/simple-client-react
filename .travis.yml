@@ -15,10 +15,10 @@ env:
   - secure: OWXL/JZOBYnHBPL+eGqcMJTwuP+k+/5cRjRKU9YvwP/CZ3bIpl7oudo/VKHEfZUOoUjP/tzE2QRoUcUx6GtbFNF7wSi1XQfAozjUfK2xlAc3vBo9xE25UwyhoYYCCJYytT6fEomWSmU0EvxLURx947Flpiap2wxoIwxBQAWFXHTIQijnbtpUtzrOOGBsTU31Sh+oNPyF5u9ES5xswt7NBhQk+oCivGAwldX+oeH6w6bDnburFuS22ozfLqn/bEGFHiH40yZO329UOL2rPNEdfLGDTfEsduPdc6hMlbgvnjI3j5wcUI2722/dKq7MOgJcbK4KKKi1io15rpsZbO4ZG2Rvskb3DZJpf1nUaYfx4sIZzzqJH+yjN8NN3gIiTIuu/T+7lQxkCyrurjUnU/ylqXNsoemRRpEPuej+YGAgDpcN6l2bvqKbDc0gk2+HXf4Aljps91whx3RExhPto18tKS1rSzpBuP6x+QQAD6CC4Eyv8ZLiYTcrj92R+D5/nfcVu9qwdDvLdYfMtupREUe/Kf97vPQPy2xwuviFG8XV5lIScJSkzqcfXj2+xa/ZgeIEqo70/ez7qCpKIizB7EiFY5BmPxE73lLQORPJkHXDjRB07XTuuK1z/E6A0FgLb4HgR/rqQs1nYBrMR/CAas0RmgXUNaCAe7mRdefGss6eyWI= #DOCKER_PASS
   - secure: njOfEvIi0p5DHUxB/HSwOkhTNjjtyK9y/K/8W+vQYxfSW8J1Z9Aq1gt7n9/F152LOXZbKLVE+4N5JadYMbZcEi90dqxZ30wYOFsNgU4lht9I/+On3XU1V6EKTlTnRerDvTUD7P60T/1UyewhoVjSSb4YHChJPvjK1WT4C9sJsWRNHa2mPsGi+8i5EpnKoro3DdCJg082s00EmPKfbfz1Y+g8y5Od1yKjlL2MV5Z8Y9FxeFIzTvESXaN3mp36FsmP7wTyxR9lUKMRbGxXkDFLrOvYXrTzqfPnPn5ECWOgvi3CZ5F0WE9MHULYkk+Rp7fSVhb0bJSeWxNRlXNVuGG11zhj2GCV69W2qwx7JerluQVUcQkNoylLkpiElrzv2587YI9dPf11nuMXhG5oaoBayFPfnHhZi8zjgK6+uh3yLJ7QhN/ad0ptR0eTfigQ0QEZROfDqHHOxrmiIDTJr2Ra8++9r30fRpnJRgiQzbYJ3+Aq+Iuyh9AcowxNJxuk3jxDATfFjyeULW2mGpaz9sfAdltWW4l3Xm+SKuHCN1YOcwsA+1u8Ttxda62/+X+GRODb/E2AN3AyGWpneXyiPbA1Vy0SXGir184sWBnKVu4TLzwqtIIilYSgE0AqE126OLPZTQLGFv9AkrDUyoTsWVMTFt8j6zC3HUGyefshqip3Lks= #DOCKER_EMAIL
 after_success:
-- docker login -e $DOCKER_EMAIL -u $DOCKER_USER -p $DOCKER_PASS
 - export REPO=callthemonline/simple-client-react
 - export TAG=`if [ "$TRAVIS_BRANCH" == "master" ]; then echo "latest"; else echo $TRAVIS_BRANCH
   ; fi`
 - docker build -f Dockerfile -t $REPO:$COMMIT .
 - docker tag $REPO:$COMMIT $REPO:$TAG
+- docker login -u $DOCKER_USER -p $DOCKER_PASS
 - docker push $REPO
