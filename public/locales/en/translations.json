@@ -6,6 +6,7 @@
     "onAir": "on air!"    
   },
   "appbar": {
-    "title": "callthem.online"
+    "title": "callthem.online",
+    "reset": "Reset"
   }
 }
