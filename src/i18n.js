@@ -8,6 +8,11 @@ i18n
   .use(LanguageDetector)
   .use(reactI18nextModule)
   .init({
+    detection:
+    {
+      order: ['querystring', 'cookie', 'localStorage', 'navigator', 'htmlTag'],
+      lookupQuerystring: 'lang',
+    },
     fallbackLng: 'en',
 
     // have a common namespace used around the full app

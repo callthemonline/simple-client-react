@@ -13,7 +13,7 @@ import IconButton from 'material-ui/IconButton';
 import CallIcon from 'material-ui-icons/Call';
 import CallEndIcon from 'material-ui-icons/CallEnd';
 import PhoneInTalkIcon from 'material-ui-icons/PhoneInTalk';
-import { I18n } from 'react-i18next';
+import { translate } from 'react-i18next';
 import {
   SIP_STATUS_CONNECTED,
   CALL_STATUS_IDLE,
@@ -54,27 +54,24 @@ const Dialer = ({
   onStartButtonClick,
   onStopButtonClick,
   callStatus,
-  helperText,
+  helperTextLabel,
+  t,
 }) => (
   <Wrapper>
     <CallForm>
-      <I18n ns="translations">
-        {(t) => (
-          <TextField
-            label={callStatus === CALL_STATUS_IDLE ? t('dialer.label') : ' '}
-            placeholder={t('dialer.sample')}
-            error={!phoneNumberIsEmpty && !phoneNumberIsValid}
-            helperText={helperText}
-            value={phoneNumber}
-            disabled={callStatus !== CALL_STATUS_IDLE}
-            InputProps={{
+      <TextField
+        label={callStatus === CALL_STATUS_IDLE ? t('dialer.label') : ' '}
+        placeholder={t('dialer.sample')}
+        error={!phoneNumberIsEmpty && !phoneNumberIsValid}
+        helperText={helperTextLabel ? t(helperTextLabel) : ' '}
+        value={phoneNumber}
+        disabled={callStatus !== CALL_STATUS_IDLE}
+        InputProps={{
               onChange: onPhoneNumberChange,
               onFocus: onPhoneNumberFocus,
               onKeyDown: onPhoneNumberKeyDown,
             }}
-          />
-        )}
-      </I18n>
+      />
       <ActionButtonWrapper>
         {callStatus === CALL_STATUS_IDLE ? (
           <IconButton
@@ -101,6 +98,7 @@ const Dialer = ({
 );
 
 export default compose(
+  translate('translations'),
   withPropsOnChange([], () => ({
     requireLogin: () => {
       window.location.href = '/login';
@@ -155,15 +153,15 @@ export default compose(
     };
   }),
   withPropsOnChange(['callStatus'], ({ callStatus }) => {
-    let helperText = ' ';
+    let helperTextLabel = null;
     if (callStatus === CALL_STATUS_STARTING) {
-      helperText = 'dialing...';
+      helperTextLabel = 'dialer.dialing';
     }
     if (callStatus === CALL_STATUS_ACTIVE) {
-      helperText = 'on air!';
+      helperTextLabel = 'dialer.onAir';
     }
     return {
-      helperText,
+      helperTextLabel,
       callStatus: callStatus || CALL_STATUS_IDLE,
     };
   }),
