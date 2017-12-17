@@ -8,8 +8,7 @@ i18n
   .use(LanguageDetector)
   .use(reactI18nextModule)
   .init({
-    detection:
-    {
+    detection: {
       order: ['querystring', 'cookie', 'localStorage', 'navigator', 'htmlTag'],
       lookupQuerystring: 'lang',
     },
@@ -29,6 +28,5 @@ i18n
       wait: true,
     },
   });
-
 
 export default i18n;

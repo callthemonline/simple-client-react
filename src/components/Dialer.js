@@ -67,10 +67,10 @@ const Dialer = ({
         value={phoneNumber}
         disabled={callStatus !== CALL_STATUS_IDLE}
         InputProps={{
-              onChange: onPhoneNumberChange,
-              onFocus: onPhoneNumberFocus,
-              onKeyDown: onPhoneNumberKeyDown,
-            }}
+          onChange: onPhoneNumberChange,
+          onFocus: onPhoneNumberFocus,
+          onKeyDown: onPhoneNumberKeyDown,
+        }}
       />
       <ActionButtonWrapper>
         {callStatus === CALL_STATUS_IDLE ? (
