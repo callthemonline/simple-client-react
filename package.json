@@ -27,6 +27,7 @@
     "react-dom": "^16.2.0",
     "react-i18next": "^7.3.0",
     "react-redux": "^5.0.6",
+    "react-router-dom": "^4.2.2",
     "react-sip": "^0.5.0",
     "recompose": "^0.26.0",
     "redux": "^3.7.2",

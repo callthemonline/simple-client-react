@@ -12,6 +12,7 @@ module.exports = {
     'class-methods-use-this': 'warn',
     'dot-notation': 'off',
     'import/prefer-default-export': 'off',
+    'jsx-a11y/anchor-is-valid': 'off',
     'no-confusing-arrow': 'off',
     'no-mixed-operators': [
       'error',

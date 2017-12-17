@@ -1,16 +1,16 @@
 import React from 'react';
 import { ApolloProvider } from 'react-apollo';
-import { connect } from 'react-redux';
 import styled from 'styled-components';
 import { MuiThemeProvider, createMuiTheme } from 'material-ui/styles';
 import { blue } from 'material-ui/colors';
+import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 
 import client from '../graphql/client';
 
 import DynamicSipProvider from './DynamicSipProvider';
 import AppBar from './AppBar';
-import Dialer from './Dialer';
-import CallLog from './CallLog';
+import MainAreaWithDialer from './MainAreaWithDialer';
+import MainAreaWith404 from './MainAreaWith404';
 
 const theme = createMuiTheme({
   palette: {
@@ -32,50 +32,22 @@ const Wrapper = styled.div`
   flex-direction: column;
 `;
 
-const MainArea = styled.div`
-  display: flex;
-  padding-top: 65px;
-  flex-direction: column;
-  flex-grow: 1;
-  flex-direction: column;
-`;
-
-const DialWrapper = styled.div`
-  display: flex;
-  flex-grow: ${(p) => (p['data-calllogisempty'] ? 1 : 0)};
-  position: relative;
-  transition: all 0.5s ease-in-out;
-  min-height: 120px;
-`;
-const CallLogWrapper = styled.div`
-  display: flex;
-  flex-grow: ${(p) => (p['data-calllogisempty'] ? 0 : 1)};
-  height: ${(p) => (p['data-calllogisempty'] ? 0 : 'auto')};
-  position: relative;
-  transition: all 0.5s ease-in-out;
-  overflow: scroll;
-`;
-
-const App = ({ callLogIsEmpty }) => (
-  <ApolloProvider client={client}>
-    <DynamicSipProvider>
-      <MuiThemeProvider theme={theme}>
-        <Wrapper>
-          <AppBar />
-          <MainArea>
-            <DialWrapper data-calllogisempty={callLogIsEmpty}>
-              <Dialer />
-            </DialWrapper>
-            <CallLogWrapper data-calllogisempty={callLogIsEmpty}>
-              <CallLog />
-            </CallLogWrapper>
-          </MainArea>
-        </Wrapper>
-      </MuiThemeProvider>
-    </DynamicSipProvider>
-  </ApolloProvider>
+const App = () => (
+  <Router>
+    <ApolloProvider client={client}>
+      <DynamicSipProvider>
+        <MuiThemeProvider theme={theme}>
+          <Wrapper>
+            <AppBar />
+            <Switch>
+              <Route exact path="/" component={MainAreaWithDialer} />
+              <Route component={MainAreaWith404} />
+            </Switch>
+          </Wrapper>
+        </MuiThemeProvider>
+      </DynamicSipProvider>
+    </ApolloProvider>
+  </Router>
 );
 
-export default connect((state) => ({
-  callLogIsEmpty: !state.callLog.entries.length,
-}))(App);
+export default App;
