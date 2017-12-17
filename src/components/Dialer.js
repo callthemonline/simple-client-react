@@ -13,6 +13,7 @@ import IconButton from 'material-ui/IconButton';
 import CallIcon from 'material-ui-icons/Call';
 import CallEndIcon from 'material-ui-icons/CallEnd';
 import PhoneInTalkIcon from 'material-ui-icons/PhoneInTalk';
+import { translate } from 'react-i18next';
 import {
   SIP_STATUS_CONNECTED,
   CALL_STATUS_IDLE,
@@ -53,15 +54,16 @@ const Dialer = ({
   onStartButtonClick,
   onStopButtonClick,
   callStatus,
-  helperText,
+  helperTextLabel,
+  t,
 }) => (
   <Wrapper>
     <CallForm>
       <TextField
-        label={callStatus === CALL_STATUS_IDLE ? 'Who shall we call?' : ' '}
-        placeholder="e.g. +44 000 000-00-00"
+        label={callStatus === CALL_STATUS_IDLE ? t('dialer.label') : ' '}
+        placeholder={t('dialer.sample')}
         error={!phoneNumberIsEmpty && !phoneNumberIsValid}
-        helperText={helperText}
+        helperText={helperTextLabel ? t(helperTextLabel) : ' '}
         value={phoneNumber}
         disabled={callStatus !== CALL_STATUS_IDLE}
         InputProps={{
@@ -96,6 +98,7 @@ const Dialer = ({
 );
 
 export default compose(
+  translate('translations'),
   withPropsOnChange([], () => ({
     requireLogin: () => {
       window.location.href = '/login';
@@ -150,15 +153,15 @@ export default compose(
     };
   }),
   withPropsOnChange(['callStatus'], ({ callStatus }) => {
-    let helperText = ' ';
+    let helperTextLabel = null;
     if (callStatus === CALL_STATUS_STARTING) {
-      helperText = 'dialing...';
+      helperTextLabel = 'dialer.dialing';
     }
     if (callStatus === CALL_STATUS_ACTIVE) {
-      helperText = 'on air!';
+      helperTextLabel = 'dialer.onAir';
     }
     return {
-      helperText,
+      helperTextLabel,
       callStatus: callStatus || CALL_STATUS_IDLE,
     };
   }),
