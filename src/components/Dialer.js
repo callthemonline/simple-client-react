@@ -202,7 +202,7 @@ export default compose(
         try {
           const response = await generateSipConfig({
             variables: {
-              phoneNumber: phoneNumberWithNoSpaces,
+              phoneNumber: phoneNumberForSip,
             },
           });
           const config = get(response, ['data', 'generateSipConfig', 'config']);
