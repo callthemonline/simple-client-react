@@ -3,14 +3,21 @@ import Backend from 'i18next-xhr-backend';
 import LanguageDetector from 'i18next-browser-languagedetector';
 import { reactI18nextModule } from 'react-i18next';
 
+const languageDetector = new LanguageDetector();
+languageDetector.addDetector({
+  name: 'languageByDomain',
+  lookup: (options) => options.hostname.match(/\.im$/i) ? 'ru' : 'en',
+});
+
 i18n
   .use(Backend)
-  .use(LanguageDetector)
+  .use(languageDetector)
   .use(reactI18nextModule)
   .init({
     detection: {
-      order: ['querystring', 'cookie', 'localStorage', 'navigator', 'htmlTag'],
+      order: ['languageByDomain', 'querystring', 'cookie', 'localStorage', 'navigator', 'htmlTag'],
       lookupQuerystring: 'lang',
+      hostname: window.location.hostname,
     },
     fallbackLng: 'en',
 
@@ -18,7 +25,7 @@ i18n
     ns: ['translations'],
     defaultNS: 'translations',
 
-    debug: true,
+    debug: false,
 
     interpolation: {
       escapeValue: false, // not needed for react!!
