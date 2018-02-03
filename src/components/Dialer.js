@@ -198,11 +198,10 @@ export default compose(
           );
         }
         await updateDialer({ variables: { phoneNumber: phoneNumberForLog } });
-        const phoneNumberWithNoSpaces = phoneNumberForLog.replace(/\s+/g, '');
         try {
           const response = await generateSipConfig({
             variables: {
-              phoneNumber: phoneNumberWithNoSpaces,
+              phoneNumber: phoneNumberForSip,
             },
           });
           const config = get(response, ['data', 'generateSipConfig', 'config']);
