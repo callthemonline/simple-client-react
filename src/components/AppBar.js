@@ -12,7 +12,7 @@ import MenuIcon from 'material-ui-icons/Menu';
 
 const CustomAppBar = ({
   menuAnchorEl,
-  menuIsOpen,
+  menuIsOpen = false,
   onMenuIconButtonClick,
   onMenuRequestClose,
   onResetClick,
@@ -20,14 +20,14 @@ const CustomAppBar = ({
 }) => (
   <AppBar>
     <Toolbar>
-      <IconButton onClick={onMenuIconButtonClick} color="contrast" aria-label="Menu">
+      <IconButton onClick={onMenuIconButtonClick} aria-label="Menu">
         <MenuIcon />
       </IconButton>
       <Menu
         id="app-bar-menu"
         anchorEl={menuAnchorEl}
         open={menuIsOpen}
-        onRequestClose={onMenuRequestClose}
+        onClose={onMenuRequestClose}
       >
         <MenuItem onClick={onResetClick}>{t('appbar.reset')}</MenuItem>
       </Menu>
@@ -49,11 +49,11 @@ export default compose(
       setMenuIsOpen(true);
     },
     onMenuRequestClose: ({ setMenuIsOpen }) => () => {
-      setMenuIsOpen(undefined);
+      setMenuIsOpen(false);
     },
     onResetClick: ({ setMenuIsOpen, dispatch }) => () => {
       dispatch({ type: 'RESET' });
-      setMenuIsOpen(undefined);
+      setMenuIsOpen(false);
     },
   }),
 )(CustomAppBar);
