@@ -20,14 +20,14 @@ const CustomAppBar = ({
 }) => (
   <AppBar>
     <Toolbar>
-      <IconButton onClick={onMenuIconButtonClick} color="contrast" aria-label="Menu">
+      <IconButton onClick={onMenuIconButtonClick} aria-label="Menu">
         <MenuIcon />
       </IconButton>
       <Menu
         id="app-bar-menu"
         anchorEl={menuAnchorEl}
         open={menuIsOpen}
-        onRequestClose={onMenuRequestClose}
+        onClose={onMenuRequestClose}
       >
         <MenuItem onClick={onResetClick}>{t('appbar.reset')}</MenuItem>
       </Menu>
@@ -42,18 +42,18 @@ export default compose(
   translate('translations'),
   connect(),
   withState('menuAnchorEl', 'setMenuAnchorEl'),
-  withState('menuIsOpen', 'setMenuIsOpen'),
+  withState('menuIsOpen', 'setMenuIsOpen', false),
   withHandlers({
     onMenuIconButtonClick: ({ setMenuIsOpen, setMenuAnchorEl }) => (e) => {
       setMenuAnchorEl(e.currentTarget);
       setMenuIsOpen(true);
     },
     onMenuRequestClose: ({ setMenuIsOpen }) => () => {
-      setMenuIsOpen(undefined);
+      setMenuIsOpen(false);
     },
     onResetClick: ({ setMenuIsOpen, dispatch }) => () => {
       dispatch({ type: 'RESET' });
-      setMenuIsOpen(undefined);
+      setMenuIsOpen(false);
     },
   }),
 )(CustomAppBar);
