@@ -64,11 +64,11 @@ const DialLog = ({ entries, onListItemClick, allowListItemClicks }) => (
 export default compose(
   graphql(UpdateDialer, { name: 'updateDialer' }),
   getContext({
-    callStatus: PropTypes.string,
+    call: PropTypes.object,
   }),
   connect((state) => state.callLog),
-  withPropsOnChange(['callStatus'], ({ callStatus }) => ({
-    allowListItemClicks: callStatus === CALL_STATUS_IDLE,
+  withPropsOnChange(['call'], ({ call }) => ({
+    allowListItemClicks: call.status === CALL_STATUS_IDLE,
   })),
   lifecycle({
     state: {
