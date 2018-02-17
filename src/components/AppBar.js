@@ -12,7 +12,7 @@ import MenuIcon from 'material-ui-icons/Menu';
 
 const CustomAppBar = ({
   menuAnchorEl,
-  menuIsOpen = false,
+  menuIsOpen,
   onMenuIconButtonClick,
   onMenuRequestClose,
   onResetClick,
@@ -42,7 +42,7 @@ export default compose(
   translate('translations'),
   connect(),
   withState('menuAnchorEl', 'setMenuAnchorEl'),
-  withState('menuIsOpen', 'setMenuIsOpen'),
+  withState('menuIsOpen', 'setMenuIsOpen', false),
   withHandlers({
     onMenuIconButtonClick: ({ setMenuIsOpen, setMenuAnchorEl }) => (e) => {
       setMenuAnchorEl(e.currentTarget);
